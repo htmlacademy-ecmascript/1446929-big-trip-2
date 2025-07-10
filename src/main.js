@@ -6,8 +6,7 @@ import TablePresenter from './presenter/table-presenter.js';
 const pageTripControlsContainer = document.querySelector('.trip-controls');
 const pageFilterContainer = pageTripControlsContainer.querySelector('.trip-controls__filters');
 
-const pageMainContainer = document.querySelector('.page-main');
-const pageTripEventsContainer = pageMainContainer.querySelector('.page-body__container .trip-events');
+const pageTripEventsContainer = document.querySelector('.trip-events');
 
 
 const tablePresenter = new TablePresenter({ tableContainer: pageTripEventsContainer });

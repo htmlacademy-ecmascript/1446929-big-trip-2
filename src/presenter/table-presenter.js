@@ -3,12 +3,11 @@ import SortView from '../view/sort-view.js';
 import EditItineraryPointView from '../view/edit-itinerary-point-view.js';
 import ItineraryPointListView from '../view/itinerary-point-list-view.js';
 import ItineraryPointView from '../view/itinerary-point-view.js';
-import TableView from '../view/table-view.js';
 
 const ITINERARY_POINT_COUNT = 3;
 
 export default class TablePresenter {
-  tableComponent = new TableView();
+
   itineraryPointListComponent = new ItineraryPointListView();
 
   constructor({ tableContainer }) {
@@ -16,7 +15,7 @@ export default class TablePresenter {
   }
 
   init() {
-    render(new SortView(), this.tableComponent.getElement());
+    render(new SortView(), this.tableContainer);
     render(this.itineraryPointListComponent, this.tableContainer);
     render(new EditItineraryPointView(), this.itineraryPointListComponent.getElement());
 
