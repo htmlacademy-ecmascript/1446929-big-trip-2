@@ -4,23 +4,31 @@ import EditItineraryPointView from '../view/edit-itinerary-point-view.js';
 import ItineraryPointListView from '../view/itinerary-point-list-view.js';
 import ItineraryPointView from '../view/itinerary-point-view.js';
 
-const ITINERARY_POINT_COUNT = 3;
-
 export default class TablePresenter {
 
   itineraryPointListComponent = new ItineraryPointListView();
 
-  constructor({ tableContainer }) {
+  constructor({ tableContainer, pointsModel }) {
     this.tableContainer = tableContainer;
+    this.pointsModel = pointsModel;
   }
 
   init() {
+    this.points = this.pointsModel.getPoints();
+    this.destinations = this.pointsModel.getDestinations();
+    this.offers = this.pointsModel.getOffers();
+
     render(new SortView(), this.tableContainer);
     render(this.itineraryPointListComponent, this.tableContainer);
     render(new EditItineraryPointView(), this.itineraryPointListComponent.getElement());
 
-    for (let i = 0; i < ITINERARY_POINT_COUNT; i++) {
-      render(new ItineraryPointView(), this.itineraryPointListComponent.getElement());
+    for (let i = 0; i < this.points.length; i++) {
+      render(new ItineraryPointView(
+        {
+          point: this.points[i],
+          destinations: this.destinations,
+          offers: this.offers
+        }), this.itineraryPointListComponent.getElement());
     }
   }
 }
