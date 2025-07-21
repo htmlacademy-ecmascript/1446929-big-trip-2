@@ -1,5 +1,24 @@
 import { createElement } from '../render.js';
 
+export default class EditItineraryPointView {
+  getTemplate() {
+    return createEditItineraryPointTemplate();
+  }
+
+  getElement() {
+    if (!this.element) {
+      this.element = createElement(this.getTemplate());
+    }
+
+    return this.element;
+  }
+
+  removeElement() {
+    this.element = null;
+  }
+}
+
+
 function createEditItineraryPointTemplate() {
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -158,20 +177,3 @@ function createEditItineraryPointTemplate() {
   );
 }
 
-export default class EditItineraryPointView {
-  getTemplate() {
-    return createEditItineraryPointTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
-}

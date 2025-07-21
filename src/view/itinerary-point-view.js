@@ -1,6 +1,30 @@
 import { createElement } from '../render.js';
 import { humanizeEventDate } from '../utils.js';
 
+export default class ItineraryPointView {
+  constructor({ point, destinations, offers }) {
+    this.point = point;
+    this.destinations = destinations;
+    this.offers = offers;
+  }
+
+  getTemplate() {
+    return createItineraryPointTemplate(this.point, this.destinations, this.offers);
+  }
+
+  getElement() {
+    if (!this.element) {
+      this.element = createElement(this.getTemplate());
+    }
+
+    return this.element;
+  }
+
+  removeElement() {
+    this.element = null;
+  }
+}
+
 
 function createItineraryPointTemplate(point, destinations, offers) {
   const { type, basePrice, isFavorite, dateFrom } = point;
@@ -54,26 +78,3 @@ function createItineraryPointTemplate(point, destinations, offers) {
   );
 }
 
-export default class ItineraryPointView {
-  constructor({ point, destinations, offers }) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
-  }
-
-  getTemplate() {
-    return createItineraryPointTemplate(this.point, this.destinations, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
-}

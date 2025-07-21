@@ -8,15 +8,17 @@ export default class TablePresenter {
 
   itineraryPointListComponent = new ItineraryPointListView();
 
-  constructor({ tableContainer, pointsModel }) {
+  constructor({ tableContainer, pointsModel, destinationsModel, offersModel }) {
     this.tableContainer = tableContainer;
     this.pointsModel = pointsModel;
+    this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
   }
 
   init() {
     this.points = this.pointsModel.getPoints();
-    this.destinations = this.pointsModel.getDestinations();
-    this.offers = this.pointsModel.getOffers();
+    this.destinations = this.destinationsModel.getDestinations();
+    this.offers = this.offersModel.getOffers();
 
     render(new SortView(), this.tableContainer);
     render(this.itineraryPointListComponent, this.tableContainer);
