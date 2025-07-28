@@ -1,55 +1,60 @@
-import { createElement } from '../render.js';
-import { humanizeEventDate } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeEventDate, humanizeEventTime, getTimeDifference } from '../utils.js';
 
-export default class ItineraryPointView {
-  constructor({ point, destinations, offers }) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+
+export default class ItineraryPointView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+  #handleEditPointClick = null;
+
+  constructor({ point, destinations, offers, onEditPointClick }) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleEditPointClick = onEditPointClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editPointClickHandler);
   }
 
-  getTemplate() {
-    return createItineraryPointTemplate(this.point, this.destinations, this.offers);
+  get template() {
+    return createItineraryPointTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #editPointClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditPointClick();
+  };
 
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
 
-
 function createItineraryPointTemplate(point, destinations, offers) {
-  const { type, basePrice, isFavorite, dateFrom } = point;
+  const { type, basePrice, isFavorite, dateFrom, dateTo } = point;
   const pointDestination = destinations.find((destination) => destination.id === point.destination);
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
 
-  const date = humanizeEventDate(dateFrom);
-
+  const startDate = humanizeEventDate(dateFrom);
+  const startTime = humanizeEventTime(dateFrom);
+  const endTime = humanizeEventTime(dateTo);
+  const timeDifference = getTimeDifference(dateFrom, dateTo);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${date}</time>
+        <time class="event__date" datetime="2019-03-18">${startDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${pointDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${dateFrom}">${startTime}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${dateTo}">${endTime}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${timeDifference}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

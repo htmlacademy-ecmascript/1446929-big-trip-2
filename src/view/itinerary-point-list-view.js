@@ -1,21 +1,10 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-export default class ItineraryPointListView {
-  getTemplate() {
+export default class ItineraryPointListView extends AbstractView {
+  get template() {
     return createItineraryPointListTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
 
 function createItineraryPointListTemplate() {
