@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeEventDate, humanizeEventTime, getTimeDifference } from '../utils.js';
+import { humanizeEventDate, humanizeEventTime, getTimeDifference } from '../utils/point.js';
 
 
 export default class ItineraryPointView extends AbstractView {

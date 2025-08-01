@@ -1,12 +1,8 @@
 import dayjs from 'dayjs';
-import { DateFormat } from './const.js';
+import { DateFormat } from '../const.js';
 import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
-
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
-
-const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 function humanizeEventDate(dueDate) {
   return dueDate ? dayjs(dueDate).format(DateFormat.MONTH_DAY) : '';
@@ -35,4 +31,16 @@ const getTimeDifference = (dateFrom, dateTo) => {
   return durationObject.format(DateFormat.DURATION_DAY_HOUR_MINUTE);
 };
 
-export { getRandomArrayElement, getRandomNumber, humanizeEventDate, humanizeFormEventDate, humanizeEventTime, getTimeDifference };
+function isPointDateInPast(date) {
+  return dayjs().isAfter(date, 'D');
+}
+
+function isPointDateInFuture(date) {
+  return dayjs().isBefore(date, 'D');
+}
+
+function isPointDateInPresent(date) {
+  return dayjs().isSame(dayjs(date));
+}
+
+export { humanizeEventDate, humanizeFormEventDate, humanizeEventTime, getTimeDifference, isPointDateInPast, isPointDateInFuture, isPointDateInPresent };

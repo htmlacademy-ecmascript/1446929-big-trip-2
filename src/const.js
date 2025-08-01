@@ -11,4 +11,18 @@ const DateFormat = {
   DURATION_TIME_MINUTE: 'mm[M]',
 };
 
-export { POINT_COUNT, POINT_TYPES, DateFormat };
+const NoPointMessage = {
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  PRESENT: 'There are no present events now',
+  FUTURE: 'There are no future events now'
+};
+
+const FilterType = {
+  EVERYTHING: 'everything',
+  PAST: 'past',
+  PRESENT: 'present',
+  FUTURE: 'future'
+};
+
+export { POINT_COUNT, POINT_TYPES, DateFormat, NoPointMessage, FilterType };
