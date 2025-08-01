@@ -1,8 +1,12 @@
 import { render, replace } from '../framework/render.js';
+import { isEscapeKey } from '../utils/common.js';
+import { NoPointMessage } from '../const.js';
 import SortView from '../view/sort-view.js';
 import EditItineraryPointView from '../view/edit-itinerary-point-view.js';
 import ItineraryPointListView from '../view/itinerary-point-list-view.js';
 import ItineraryPointView from '../view/itinerary-point-view.js';
+import NoPointView from '../view/no-point-view.js';
+
 
 export default class TablePresenter {
 
@@ -27,18 +31,13 @@ export default class TablePresenter {
     this.#destinations = this.#destinationsModel.getDestinations();
     this.#offers = this.#offersModel.getOffers();
 
-    render(new SortView(), this.#tableContainer);
-    render(this.#itineraryPointListComponent, this.#tableContainer);
-
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint({ point: this.#points[i], destinations: this.#destinations, offers: this.#offers });
-    }
+    this.#renderTable();
   }
 
   #renderPoint({ point, destinations, offers }) {
 
     const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
+      if (isEscapeKey(evt)) {
         evt.preventDefault();
         replaceEditFormToPoint();
         document.removeEventListener('keydown', escKeyDownHandler);
@@ -77,5 +76,19 @@ export default class TablePresenter {
     }
 
     render(pointComponent, this.#itineraryPointListComponent.element);
+  }
+
+  #renderTable() {
+    render(new SortView(), this.#tableContainer);
+    render(this.#itineraryPointListComponent, this.#tableContainer);
+
+    if (this.#points.length === 0) {
+      render(new NoPointView({ message: NoPointMessage.EVERYTHING }), this.#tableContainer);
+      return;
+    }
+
+    for (let i = 0; i < this.#points.length; i++) {
+      this.#renderPoint({ point: this.#points[i], destinations: this.#destinations, offers: this.#offers });
+    }
   }
 }

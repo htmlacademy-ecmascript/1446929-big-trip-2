@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeFormEventDate } from '../utils.js';
+import { humanizeFormEventDate } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
 
 export default class EditItineraryPointView extends AbstractView {
