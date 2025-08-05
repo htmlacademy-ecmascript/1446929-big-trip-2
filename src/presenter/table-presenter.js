@@ -1,4 +1,4 @@
-import { render, replace } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
 import { NoPointMessage } from '../const.js';
 import SortView from '../view/sort-view.js';
@@ -18,6 +18,8 @@ export default class TablePresenter {
   #points = null;
   #destinations = null;
   #offers = null;
+  #sortComponent = new SortView();
+  #noPointComponent = new NoPointView({ message: NoPointMessage.EVERYTHING });
 
   constructor({ tableContainer, pointsModel, destinationsModel, offersModel }) {
     this.#tableContainer = tableContainer;
@@ -32,6 +34,10 @@ export default class TablePresenter {
     this.#offers = this.#offersModel.getOffers();
 
     this.#renderTable();
+  }
+
+  #renderSort() {
+    render(this.#sortComponent, this.#tableContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderPoint({ point, destinations, offers }) {
@@ -78,17 +84,28 @@ export default class TablePresenter {
     render(pointComponent, this.#itineraryPointListComponent.element);
   }
 
+  #renderPoints() {
+    this.#points.forEach((point) => this.#renderPoint({ point: point, destinations: this.#destinations, offers: this.#offers }));
+  }
+
+  #renderPointList() {
+    this.#renderPoints(0, this.#points.length);
+  }
+
+  #renderNoPoints() {
+    render(this.#noPointComponent, this.#tableContainer);
+  }
+
   #renderTable() {
-    render(new SortView(), this.#tableContainer);
+
     render(this.#itineraryPointListComponent, this.#tableContainer);
 
     if (this.#points.length === 0) {
-      render(new NoPointView({ message: NoPointMessage.EVERYTHING }), this.#tableContainer);
+      this.#renderNoPoints();
       return;
     }
 
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint({ point: this.#points[i], destinations: this.#destinations, offers: this.#offers });
-    }
+    this.#renderSort();
+    this.#renderPointList();
   }
 }
