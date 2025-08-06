@@ -18,6 +18,7 @@ export default class TablePresenter {
   #offers = null;
   #sortComponent = new SortView();
   #noPointComponent = new NoPointView({ message: NoPointMessage.EVERYTHING });
+  #pointPresenters = new Map();
 
   constructor({ tableContainer, pointsModel, destinationsModel, offersModel }) {
     this.#tableContainer = tableContainer;
@@ -39,11 +40,13 @@ export default class TablePresenter {
   }
 
   #renderPoint(data) {
+    const { point } = data;
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#itineraryPointListComponent.element,
     });
 
     pointPresenter.init(data);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderPoints() {
@@ -52,6 +55,11 @@ export default class TablePresenter {
 
   #renderPointList() {
     this.#renderPoints(0, this.#points.length);
+  }
+
+  #clearPointList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   }
 
   #renderNoPoints() {
