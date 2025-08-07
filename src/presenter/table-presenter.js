@@ -36,6 +36,10 @@ export default class TablePresenter {
     this.#renderTable();
   }
 
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
   #handlePointChange = (updatedData) => {
     this.#points = updateItem(this.#points, updatedData.point);
     this.#pointPresenters.get(updatedData.point.id).init(updatedData);
@@ -50,6 +54,7 @@ export default class TablePresenter {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#itineraryPointListComponent.element,
       onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
 
     pointPresenter.init(data);
