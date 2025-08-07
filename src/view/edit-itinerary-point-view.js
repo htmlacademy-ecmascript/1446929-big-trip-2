@@ -28,12 +28,12 @@ export default class EditItineraryPointView extends AbstractView {
 
   #editFormClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditFormClick();
+    this.#handleEditFormSubmit(this.#point);
   };
 
   #editFormSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditFormSubmit();
+    this.#handleEditFormSubmit(this.#point);
   };
 
 }
@@ -129,7 +129,7 @@ function createEditItineraryPointTemplate(point, destinations, offers) {
           ${pictures.length ? (
         `<div class="event__photos-container">
                 <div class="event__photos-tape">
-                  ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)}
+                  ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('')}
                 </div>
             </div>`
       ) : ''}

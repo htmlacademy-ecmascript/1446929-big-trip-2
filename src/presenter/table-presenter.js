@@ -1,11 +1,10 @@
-import { render, replace } from '../framework/render.js';
-import { isEscapeKey } from '../utils/common.js';
+import { render, RenderPosition } from '../framework/render.js';
 import { NoPointMessage } from '../const.js';
+import { updateItem } from '../utils/common.js';
 import SortView from '../view/sort-view.js';
-import EditItineraryPointView from '../view/edit-itinerary-point-view.js';
 import ItineraryPointListView from '../view/itinerary-point-list-view.js';
-import ItineraryPointView from '../view/itinerary-point-view.js';
 import NoPointView from '../view/no-point-view.js';
+import PointPresenter from './point-presenter.js';
 
 
 export default class TablePresenter {
@@ -18,6 +17,9 @@ export default class TablePresenter {
   #points = null;
   #destinations = null;
   #offers = null;
+  #sortComponent = new SortView();
+  #noPointComponent = new NoPointView({ message: NoPointMessage.EVERYTHING });
+  #pointPresenters = new Map();
 
   constructor({ tableContainer, pointsModel, destinationsModel, offersModel }) {
     this.#tableContainer = tableContainer;
@@ -34,61 +36,58 @@ export default class TablePresenter {
     this.#renderTable();
   }
 
-  #renderPoint({ point, destinations, offers }) {
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 
-    const escKeyDownHandler = (evt) => {
-      if (isEscapeKey(evt)) {
-        evt.preventDefault();
-        replaceEditFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
+  #handlePointChange = (updatedData) => {
+    this.#points = updateItem(this.#points, updatedData.point);
+    this.#pointPresenters.get(updatedData.point.id).init(updatedData);
+  };
 
-    const pointComponent = new ItineraryPointView({
-      point,
-      destinations,
-      offers,
-      onEditPointClick: () => {
-        replacePointToEditForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
-    });
-    const pointEditComponent = new EditItineraryPointView({
-      point,
-      destinations,
-      offers,
-      onEditFormClick: () => {
-        replaceEditFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onEditFormSubmit: () => {
-        replaceEditFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
+  #renderSort() {
+    render(this.#sortComponent, this.#tableContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderPoint(data) {
+    const { point } = data;
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#itineraryPointListComponent.element,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
 
-    function replacePointToEditForm() {
-      replace(pointEditComponent, pointComponent);
-    }
+    pointPresenter.init(data);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
 
-    function replaceEditFormToPoint() {
-      replace(pointComponent, pointEditComponent);
-    }
+  #renderPoints() {
+    this.#points.forEach((point) => this.#renderPoint({ point, destinations: this.#destinations, offers: this.#offers }));
+  }
 
-    render(pointComponent, this.#itineraryPointListComponent.element);
+  #renderPointList() {
+    this.#renderPoints(0, this.#points.length);
+  }
+
+  #clearPointList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
+
+  #renderNoPoints() {
+    render(this.#noPointComponent, this.#tableContainer);
   }
 
   #renderTable() {
-    render(new SortView(), this.#tableContainer);
+
     render(this.#itineraryPointListComponent, this.#tableContainer);
 
     if (this.#points.length === 0) {
-      render(new NoPointView({ message: NoPointMessage.EVERYTHING }), this.#tableContainer);
+      this.#renderNoPoints();
       return;
     }
 
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint({ point: this.#points[i], destinations: this.#destinations, offers: this.#offers });
-    }
+    this.#renderSort();
+    this.#renderPointList();
   }
 }
