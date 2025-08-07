@@ -6,12 +6,14 @@ import EditItineraryPointView from '../view/edit-itinerary-point-view.js';
 
 export default class PointPresenter {
   #pointListContainer = null;
+  #handleDataChange = null;
   #pointComponent = null;
   #pointEditComponent = null;
   #data = null;
 
-  constructor({ pointListContainer }) {
+  constructor({ pointListContainer, onDataChange }) {
     this.#pointListContainer = pointListContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init(data) {
@@ -24,6 +26,7 @@ export default class PointPresenter {
     this.#pointComponent = new ItineraryPointView({
       ...this.#data,
       onEditPointClick: this.#handleEditPointClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#pointEditComponent = new EditItineraryPointView({
@@ -78,8 +81,22 @@ export default class PointPresenter {
     this.#replacePointToEditForm();
   };
 
-  #handleEditFormSubmit = () => {
+  #handleEditFormSubmit = (point) => {
+    this.#handleDataChange({
+      ...this.#data,
+      point
+    });
     this.#replaceEditFormToPoint();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({
+      ...this.#data,
+      point: {
+        ...this.#data.point,
+        isFavorite: !this.#data.point.isFavorite
+      }
+    });
   };
 }
 

@@ -1,5 +1,6 @@
 import { render, RenderPosition } from '../framework/render.js';
 import { NoPointMessage } from '../const.js';
+import { updateItem } from '../utils/common.js';
 import SortView from '../view/sort-view.js';
 import ItineraryPointListView from '../view/itinerary-point-list-view.js';
 import NoPointView from '../view/no-point-view.js';
@@ -35,6 +36,11 @@ export default class TablePresenter {
     this.#renderTable();
   }
 
+  #handlePointChange = (updatedData) => {
+    this.#points = updateItem(this.#points, updatedData.point);
+    this.#pointPresenters.get(updatedData.point.id).init(updatedData);
+  };
+
   #renderSort() {
     render(this.#sortComponent, this.#tableContainer, RenderPosition.AFTERBEGIN);
   }
@@ -43,6 +49,7 @@ export default class TablePresenter {
     const { point } = data;
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#itineraryPointListComponent.element,
+      onDataChange: this.#handlePointChange,
     });
 
     pointPresenter.init(data);

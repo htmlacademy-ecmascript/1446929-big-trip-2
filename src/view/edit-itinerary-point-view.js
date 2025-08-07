@@ -28,12 +28,12 @@ export default class EditItineraryPointView extends AbstractView {
 
   #editFormClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditFormClick();
+    this.#handleEditFormSubmit(this.#point);
   };
 
   #editFormSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleEditFormSubmit();
+    this.#handleEditFormSubmit(this.#point);
   };
 
 }
