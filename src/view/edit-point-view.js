@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeFormEventDate } from '../utils/point.js';
 import { POINT_TYPES } from '../const.js';
 
-export default class EditItineraryPointView extends AbstractView {
+export default class EditPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
@@ -23,7 +23,7 @@ export default class EditItineraryPointView extends AbstractView {
   }
 
   get template() {
-    return createEditItineraryPointTemplate(this.#point, this.#destinations, this.#offers);
+    return createEditPointTemplate(this.#point, this.#destinations, this.#offers);
   }
 
   #editFormClickHandler = (evt) => {
@@ -39,7 +39,7 @@ export default class EditItineraryPointView extends AbstractView {
 }
 
 
-function createEditItineraryPointTemplate(point, destinations, offers) {
+function createEditPointTemplate(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice, id } = point;
   const destinationOptions = destinations.map((destinationOption) => destinationOption.name);
   const pointDestination = destinations.find((destination) => destination.id === point.destination);

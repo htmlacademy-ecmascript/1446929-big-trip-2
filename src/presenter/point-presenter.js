@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
-import ItineraryPointView from '../view/itinerary-point-view.js';
-import EditItineraryPointView from '../view/edit-itinerary-point-view.js';
+import PointView from '../view/point-view.js';
+import EditPointView from '../view/edit-point-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -30,13 +30,13 @@ export default class PointPresenter {
     const prevPointEditComponent = this.#pointEditComponent;
 
 
-    this.#pointComponent = new ItineraryPointView({
+    this.#pointComponent = new PointView({
       ...this.#data,
       onEditPointClick: this.#handleEditPointClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    this.#pointEditComponent = new EditItineraryPointView({
+    this.#pointEditComponent = new EditPointView({
       ...this.#data,
       onEditFormClick: this.#handleEditFormSubmit,
       onEditFormSubmit: this.#handleEditFormSubmit,
@@ -109,6 +109,7 @@ export default class PointPresenter {
       ...this.#data,
       point: {
         ...this.#data.point,
+
         isFavorite: !this.#data.point.isFavorite
       }
     });
