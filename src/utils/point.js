@@ -20,15 +20,15 @@ const getTimeDifference = (dateFrom, dateTo) => {
   const startDate = dayjs(dateFrom);
   const endDate = dayjs(dateTo);
   const datesDifference = endDate.diff(startDate);
-  const durationObject = dayjs.duration(datesDifference);
+  const durationData = dayjs.duration(datesDifference);
 
-  if (durationObject.asHours() < 1) {
-    return durationObject.format(DateFormat.DURATION_TIME_MINUTE);
+  if (durationData.asHours() < 1) {
+    return durationData.format(DateFormat.DURATION_TIME_MINUTE);
   }
-  if (durationObject.asDays() < 1) {
-    return durationObject.format(DateFormat.DURATION_TIME_HOUR_MINUTE);
+  if (durationData.asDays() < 1) {
+    return durationData.format(DateFormat.DURATION_TIME_HOUR_MINUTE);
   }
-  return durationObject.format(DateFormat.DURATION_DAY_HOUR_MINUTE);
+  return durationData.format(DateFormat.DURATION_DAY_HOUR_MINUTE);
 };
 
 function isPointDateInPast(date) {
@@ -43,4 +43,22 @@ function isPointDateInPresent(date) {
   return dayjs().isSame(dayjs(date));
 }
 
-export { humanizeEventDate, humanizeFormEventDate, humanizeEventTime, getTimeDifference, isPointDateInPast, isPointDateInFuture, isPointDateInPresent };
+function sortPointsByPrice(pointA, pointB) {
+  return pointB.basePrice - pointA.basePrice;
+}
+
+function sortPointsByTime(pointA, pointB) {
+  const timeA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const timeB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+
+  return timeB - timeA;
+}
+
+function sortPointsByDate(pointA, pointB) {
+  const dateA = dayjs(pointA.dateFrom);
+  const dateB = dayjs(pointB.dateFrom);
+
+  return dateA - dateB;
+}
+
+export { humanizeEventDate, humanizeFormEventDate, humanizeEventTime, getTimeDifference, isPointDateInPast, isPointDateInFuture, isPointDateInPresent, sortPointsByPrice, sortPointsByTime, sortPointsByDate };
