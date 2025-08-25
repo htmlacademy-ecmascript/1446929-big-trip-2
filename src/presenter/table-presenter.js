@@ -32,10 +32,10 @@ export default class TablePresenter {
   }
 
   init() {
-    this.#points = [...this.#pointsModel.getPoints()].sort(sortPointsByDate);
-    this.#destinations = [...this.#destinationsModel.getDestinations()];
-    this.#offers = [...this.#offersModel.getOffers()];
-    this.#sourceTablePoints = [...this.#pointsModel.getPoints()];
+    this.#points = [...this.#pointsModel.points].sort(sortPointsByDate);
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
+    this.#sourceTablePoints = [...this.#pointsModel.points];
 
     this.#renderTable();
   }
@@ -44,10 +44,10 @@ export default class TablePresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleDataChange = (updatedPoint) => {
-    this.#points = updateItem(this.#points, updatedPoint.point);
-    this.#sourceTablePoints = updateItem(this.#sourceTablePoints, updatedPoint.point);
-    this.#pointPresenters.get(updatedPoint.point.id).init(updatedPoint);
+  #handleDataChange = (updatedData) => {
+    this.#points = updateItem(this.#points, updatedData.point);
+    this.#sourceTablePoints = updateItem(this.#sourceTablePoints, updatedData.point);
+    this.#pointPresenters.get(updatedData.point.id).init(updatedData);
   };
 
   #sortPoints(sortType) {
@@ -103,7 +103,11 @@ export default class TablePresenter {
   }
 
   #renderPoints() {
-    this.#points.forEach((point) => this.#renderPoint({ point, destinations: this.#destinations, offers: this.#offers }));
+    this.#points.forEach((point) => this.#renderPoint({
+      point,
+      destinations: this.#destinations,
+      offers: this.#offers,
+    }));
   }
 
   #renderPointList() {
