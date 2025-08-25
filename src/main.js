@@ -13,7 +13,7 @@ const pageTripEventsContainer = document.querySelector('.trip-events');
 const pointsModel = new PointsModel();
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
-const filters = generateFilter(pointsModel.getPoints());
+const filters = generateFilter(pointsModel.points);
 
 const tablePresenter = new TablePresenter(
   {
